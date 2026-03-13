@@ -2,6 +2,11 @@
 
 A backend service for shortening URLs and redirecting users to the original link.
 
+
+## Live API
+
+https://url-shortener-backend-1-j4nq.onrender.com/docs
+
 ## Features
 - Create short URLs
 - Redirect to original URL
@@ -28,4 +33,4 @@ Return click analytics.
 
 ## Architecture
 
-Client → FastAPI → Redis → PostgreSQL
+Client → FastAPI  → PostgreSQL
