@@ -52,29 +52,15 @@ def shorten_url(data: URLCreate, db: Session = Depends(get_db)):
 @router.get("/r/{short_code}")
 def redirect(short_code: str, db: Session = Depends(get_db)):
 
-    # 1️⃣ Check Redis cache first
-    cached_url = None
-if redis_client:
-    cached_url = redis_client.get(short_code)
-
-if redis_client:
-    redis_client.set(short_code, url.original_url)
-
-    # 2️⃣ If not cached, query database
     url = db.query(URL).filter(URL.short_code == short_code).first()
 
     if not url:
         raise HTTPException(status_code=404, detail="URL not found")
 
-    # 3️⃣ Store in Redis cache
-    redis_client.set(short_code, url.original_url)
-
-    # 4️⃣ Increment click counter
     url.clicks += 1
     db.commit()
 
     return RedirectResponse(url=url.original_url)
-
 
 
 @router.get("/stats/{short_code}")
