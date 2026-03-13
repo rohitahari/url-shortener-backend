@@ -53,10 +53,12 @@ def shorten_url(data: URLCreate, db: Session = Depends(get_db)):
 def redirect(short_code: str, db: Session = Depends(get_db)):
 
     # 1️⃣ Check Redis cache first
+    cached_url = None
+if redis_client:
     cached_url = redis_client.get(short_code)
 
-    if cached_url:
-        return RedirectResponse(url=cached_url)
+if redis_client:
+    redis_client.set(short_code, url.original_url)
 
     # 2️⃣ If not cached, query database
     url = db.query(URL).filter(URL.short_code == short_code).first()
